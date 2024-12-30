@@ -24,7 +24,11 @@ def _(mo):
 def _(minute, mo):
     _df = mo.sql(
         f"""
-        -- added in an AM/PM Column
+        -- added in an AM/PM Column and changed the DaytimeName column
+        -- Added the TimeKey
+        -- Added the timeofdayExt
+        -- Changed the from clause Generate Series
+        -- source: https://wiki.postgresql.org/wiki/Date_and_Time_dimensions
         select DISTINCT
         strftime(minute, '%H%M')::BIGINT AS TimeKey,
         strftime(minute, '%H:%M') AS TimeOfDay,
@@ -67,7 +71,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(minute, mo, totalpowerraw2022_2023):
     _df = mo.sql(
         f"""
@@ -148,180 +152,9 @@ def _(FG_DWH, mo, totalpowerraw2022_2023):
     return
 
 
-@app.cell(disabled=True)
-def _(generate_series, mo):
-    _df = mo.sql(
-        f"""
-        SELECT * FROM generate_series(1,5)
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(mo):
-    _df = mo.sql(
-        f"""
-        SELECT RANGE(DATE '2009-01-01', DATE '2013-12-31', INTERVAL 1 DAY)
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(mo):
-    _df = mo.sql(
-        f"""
-        SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute'))
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(minute, mo):
-    _df = mo.sql(
-        f"""
-        -- https://wiki.postgresql.org/wiki/Date_and_Time_dimensions
-        select to_char(minute, 'hh24:mi') AS TimeOfDay,
-        	-- Hour of the day (0 - 23)
-        	extract(hour from minute) as Hour, 
-        	-- Extract and format quarter hours
-        	to_char(minute - (extract(minute from minute)::integer % 15 || 'minutes')::interval, 'hh24:mi') ||
-        	' – ' ||
-        	to_char(minute - (extract(minute from minute)::integer % 15 || 'minutes')::interval + '14 minutes'::interval, 'hh24:mi')
-        		as QuarterHour,
-        	-- Minute of the day (0 - 1439)
-        	extract(hour from minute)*60 + extract(minute from minute) as minute,
-        	-- Names of day periods
-        	case when to_char(minute, 'hh24:mi') between '06:00' and '08:29'
-        		then 'Morning'
-        	     when to_char(minute, 'hh24:mi') between '08:30' and '11:59'
-        		then 'AM'
-        	     when to_char(minute, 'hh24:mi') between '12:00' and '17:59'
-        		then 'PM'
-        	     when to_char(minute, 'hh24:mi') between '18:00' and '22:29'
-        		then 'Evening'
-        	     else 'Night'
-        	end as DaytimeName,
-        	-- Indicator of day or night
-        	case when to_char(minute, 'hh24:mi') between '07:00' and '19:59' then 'Day'
-        	     else 'Night'
-        	end AS DayNight
-        from (SELECT '0:00'::time + (sequence.minute || ' minutes')::interval AS minute
-        	FROM generate_series(0,1439) AS sequence(minute)
-        	GROUP BY sequence.minute
-             ) DQ
-        order by 1
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(generate_series, minute, mo):
-    _df = mo.sql(
-        f"""
-        SELECT 
-        strftime(minute, 'hh24:mi') AS TimeOfDay,
-        extract(hour from minute) as Hour, 
-        extract(hour from minute)*60 + extract(minute from minute) as minute
-        from (SELECT '0:00'::time + (sequence.minute || ' minutes')::interval AS minute
-        	FROM generate_series(0,1439) AS sequence(minute)
-        	GROUP BY sequence.minute
-             ) DQ
-        order by 1, 2
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(mo):
-    _df = mo.sql(
-        f"""
-        SELECT TIME '00:01:00'
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(mo):
-    _df = mo.sql(
-        f"""
-        SELECT strftime('1992-01-01 02:01:00'::TIMESTAMP, '%H:%M')
-        """
-    )
-    return
-
-
 @app.cell
 def _(mo):
     mo.md(r"""DuckDB doesn't support converting a time data type to text. the function strftime only takes DATE or TIMESTAMP but not Time""")
-    return
-
-
-@app.cell(disabled=True)
-def _(mo):
-    _df = mo.sql(
-        f"""
-        -- source: https://dba.stackexchange.com/questions/175963/how-do-i-generate-a-date-series-in-postgresql, I added unnest. 
-        SELECT *
-        FROM (
-        	SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute'))
-        	) AS a
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(generate_series, mo):
-    _df = mo.sql(
-        f"""
-        --alternative way using GROUP BY instead of UNNEST
-        SELECT '2016-10-16 00:00'::timestamp + (sequence.minute || ' minutes')::interval AS minute
-        	FROM generate_series(0,1439) AS sequence(minute)
-        	GROUP BY sequence.minute
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(generate_series, mo):
-    _df = mo.sql(
-        f"""
-        EXPLAIN SELECT '2016-10-16 00:00'::timestamp + (sequence.minute || ' minutes')::interval AS minute
-        	FROM generate_series(0,1439) AS sequence(minute)
-        	GROUP BY sequence.minute
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(generate_series, mo):
-    _df = mo.sql(
-        f"""
-        SELECT sequence.minute
-        	FROM generate_series(0,1439) AS sequence(minute)
-        	GROUP BY sequence.minute
-        """
-    )
-    return
-
-
-@app.cell(disabled=True)
-def _(mo):
-    _df = mo.sql(
-        f"""
-        --testing out why group by alternative to unnest isn't working for a Timestamp based series vs an int based one from above. 
-        SELECT sequence.timestamp FROM (SELECT generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute')) as sequence(timestamp)
-        GROUP BY sequence.timestamp
-        """
-    )
     return
 
 
