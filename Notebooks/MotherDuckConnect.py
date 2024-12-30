@@ -4,15 +4,33 @@ __generated_with = "0.10.8"
 app = marimo.App(width="full")
 
 
-@app.cell
-def _():
-    import marimo as mo
-    return (mo,)
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""##Testing the connection to MotherDuck""")
+    return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""##Testing the connection to MotherDuck""")
+    mo.md(
+        r"""
+        We need to connect to motherduck using the following Statement: ATTACH 
+        ```sql
+        -- for the current mockup database
+        ATTACH IF NOT EXISTS 'md:FG_DWH'
+        -- Generic
+        ATTACH IF NOT EXISTS 'md:<database_name>'
+        ```
+        Relevant links: [Motherduck](https://motherduck.com/docs/sql-reference/motherduck-sql-reference/attach-database/),
+        [DuckDB Attach](https://duckdb.org/docs/sql/statements/attach), [DuckDB Connect](https://duckdb.org/docs/connect/overview.html)
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.image(src="Notebooks/connectionstring.png")
     return
 
 
@@ -76,7 +94,8 @@ def _(FG_DWH, mo, totalpowerraw2022_2023):
 
 @app.cell
 def _():
-    return
+    import marimo as mo
+    return (mo,)
 
 
 if __name__ == "__main__":
