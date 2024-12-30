@@ -21,43 +21,43 @@ def _(mo):
 
 
 @app.cell
-def _(minute, mo):
+def _(hourminute, mo):
     _df = mo.sql(
         f"""
         -- added in an AM/PM Column and changed the DaytimeName column
+        -- changed the ints to smallints to be more efficient
         -- Added the TimeKey
         -- Added the timeofdayExt
         -- Changed the from clause Generate Series
         -- source: https://wiki.postgresql.org/wiki/Date_and_Time_dimensions
         select DISTINCT
-        strftime(minute, '%H%M')::BIGINT AS TimeKey,
-        strftime(minute, '%H:%M') AS TimeOfDay,
-        strftime(minute, '%H:%M %p') AS TimeOfDayExt,
+        strftime(hourminute, '%H%M')::SMALLINT AS TimeKey,
+        strftime(hourminute, '%H:%M') AS TimeOfDay,
+        strftime(hourminute, '%H:%M %p') AS TimeOfDayExt,
         	-- Hour of the day (0 - 23)
-        extract(hour from minute) as Hour, 
+        extract(hour from hourminute)::SMALLINT as Hour, 
         	-- Minute of the day (0 - 1439)
-        	extract(hour from minute)*60 + extract(minute from minute) as Minute,
+        CAST(extract(hour from hourminute)*60 + extract(minute from hourminute) as SMALLINT) as Minute,
         	-- Extract and format quarter hours
-        	strftime(minute - (extract(minute from minute)::integer % 15 || 'minutes')::interval, '%H:%M') ||
-        	' – ' ||
-        	strftime(minute - (extract(minute from minute)::integer % 15 || 'minutes')::interval + '14 minutes'::interval, '%H:%M')
+        strftime(hourminute - (extract(minute from hourminute)::integer % 15 || 'minutes')::interval, '%H:%M') || ' – ' ||
+        strftime(hourminute - (extract(minute from hourminute)::integer % 15 || 'minutes')::interval + '14 minutes'::interval, '%H:%M')
         		as QuarterHour,
-        	-- Names of day periods
-        	case when strftime(minute, '%H:%M') between '06:00' and '11:59'
+        -- Names of day periods
+        	case when strftime(hourminute, '%H:%M') between '06:00' and '11:59'
         		then 'Morning'
-        	     when strftime(minute, '%H:%M') between '12:00' and '17:59'
+        	     when strftime(hourminute, '%H:%M') between '12:00' and '17:59'
         		then 'Afternoon'
-        	     when strftime(minute, '%H:%M') between '18:00' and '22:29'
+        	     when strftime(hourminute, '%H:%M') between '18:00' and '22:29'
         		then 'Evening'
         	     else 'Night'
         	end as DaytimeName,
-        	-- Indicator of day or night
-        	case when strftime(minute, '%H:%M') between '07:00' and '19:59' then 'Day'
+        -- Indicator of day or night
+        	case when strftime(hourminute, '%H:%M') between '07:00' and '19:59' then 'Day'
         	     else 'Night'
         	end AS DayNight,
-            strftime(minute, '%p') as AMPM
+            strftime(hourminute, '%p') as AMPM
         FROM (
-        	SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute')) as minute
+        	SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute')) as hourminute
         	) AS DQ
         ORDER BY TimeOfDay
         """
@@ -109,6 +109,26 @@ def _(minute, mo, totalpowerraw2022_2023):
         rawtable as (SELECT *, strftime(endTime, '%H:%M') as endtimefrmt FROM "FG_DWH".mockdashraw.totalpowerraw2022_2023 LIMIT 50)
         SELECT * FROM rawtable
         INNER JOIN generated_table ON rawtable.endtimefrmt = generated_table.TimeOfDay
+        """
+    )
+    return
+
+
+@app.cell
+def _(FG_DWH, mo, totalpowerraw2022_2023):
+    _df = mo.sql(
+        f"""
+        -- basic transformations to breakout the start and end timestamp into a date and time seperate column 
+        WITH rawtable AS (
+        SELECT startTime as startDateTime, endTime as endDateTime FROM "FG_DWH".mockdashraw.totalpowerraw2022_2023 LIMIT 10
+            )
+        SELECT startDateTime, 
+        startDateTime::DATE as startDate,
+        strftime(startDateTime, '%H:%M') as startTime,
+        endDateTime, 
+        endDateTime::DATE as endDate, 
+        strftime(endDateTime, '%H:%M') as endTime
+        FROM rawtable
         """
     )
     return
