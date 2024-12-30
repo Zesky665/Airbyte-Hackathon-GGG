@@ -28,7 +28,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""### So this requires you to sign in everytime you want to use the database. If we didn't want to be prompted everytime we would save the token and configure our enviroment variables. """)
+    mo.md(r"""### So this requires you to sign in everytime you want to use the database. If we didn't want to be prompted everytime we would save the token and configure our enviroment variables.""")
     return
 
 
