@@ -134,6 +134,18 @@ def _(FG_DWH, mo, totalpowerraw2022_2023):
     return
 
 
+@app.cell
+def _(mo, rawdatedf, timedf):
+    _df = mo.sql(
+        f"""
+        SELECT startTime, startDate, timedf."TimeKey" 
+        from rawdatedf 
+        inner join timedf ON rawdatedf."startTime" = timedf."TimeOfDay"
+        """
+    )
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(
@@ -150,6 +162,7 @@ def _(mo):
 def _(mo):
     mo.md(
         r"""
+        ### Notes and Sources
         Interesting findings, DuckDB does support generate_series() [link](https://stackoverflow.com/questions/75159150/in-duckdb-how-do-i-generate-a-range-of-timestamps-between-a-start-date-column-a). Also this is the source of the date and time dimension table in postgres [link](https://wiki.postgresql.org/wiki/Date_and_Time_dimensions) [link2](https://dba.stackexchange.com/questions/175963/how-do-i-generate-a-date-series-in-postgresql)
 
         Here's a link using the RANGE function in DuckDB to generate a Date Dimension Table [link](https://gist.github.com/adityawarmanfw/0612333605d351f2f1fe5c87e1af20d2)
@@ -172,7 +185,7 @@ def _(FG_DWH, mo, totalpowerraw2022_2023):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""DuckDB doesn't support converting a time data type to text. the function strftime only takes DATE or TIMESTAMP but not Time""")
     return
