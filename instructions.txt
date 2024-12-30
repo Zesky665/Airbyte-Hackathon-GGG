@@ -1,0 +1,5 @@
+Using this branch to keep our Exploratory Data Analysis Notebooks. 
+
+Use a python package manager and sync or install with the requirements.txt
+
+Then load up the marimo edit server with the marimo edit command once you're in the venv. 
