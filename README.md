@@ -24,6 +24,18 @@ the data will be stored in a Motherduck dwh and presented using a Streamlit app.
 #### Infrastructure 
 - Terraform
 
+## Development
+
+Instructions for setting up the project:
+
+### Dependencies
+
+Dependencies are managed by [uv](https://docs.astral.sh/uv/).
+To install dependencies run:
+```shell
+uv sync
+```
+
 ## The Team
  - Zharko Cekovski aka Zesky665
  - Jonathan Biemond aka jonbiemond

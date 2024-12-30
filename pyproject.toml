@@ -1,0 +1,7 @@
+[project]
+name = "airbyte-hackathon-ggg"
+version = "0.1.0"
+description = "The Airbyte+Motherduck hackathon project by the Green Grid Geeks team."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
