@@ -15,11 +15,15 @@ def _(mo):
     mo.md(
         r"""
         We need to connect to motherduck using the following Statement: ATTACH 
+
+        You can attach all your databases or just a single one 
         ```sql
         -- for the current mockup database
         ATTACH IF NOT EXISTS 'md:FG_DWH'
         -- Generic
         ATTACH IF NOT EXISTS 'md:<database_name>'
+        -- All databases owned by you on motherduck
+        ATTACH IF NOT EXISTS 'md:'
         ```
         Relevant links: [Motherduck](https://motherduck.com/docs/sql-reference/motherduck-sql-reference/attach-database/),
         [DuckDB Attach](https://duckdb.org/docs/sql/statements/attach), [DuckDB Connect](https://duckdb.org/docs/connect/overview.html)
