@@ -36,6 +36,11 @@ To install dependencies run:
 uv sync
 ```
 
+### Database connection
+
+First [generate an access token](https://motherduck.com/docs/key-tasks/authenticating-and-connecting-to-motherduck/authenticating-to-motherduck/) in MotherDuck.
+Store the token in a `.env` file as `MOTHERDUCK_TOKEN`.
+
 ## The Team
  - Zharko Cekovski aka Zesky665
  - Jonathan Biemond aka jonbiemond
