@@ -12,7 +12,7 @@ def _(mo):
 
 @app.cell
 def _():
-    import marimo as mo 
+    import marimo as mo
     return (mo,)
 
 
@@ -37,7 +37,7 @@ def _(mo):
 
         I'm choosing for now to go with a Raw -> Staging -> Presentation so I'm going to create the three schema's accordingly
 
-        I did these in the notebook editior on MotherDuck. I could replicate here with CREATE IF NOT EXISTS. Additionally I would need to fully qualify the tables with database.schema.table 
+        I did these in the notebook editior on MotherDuck. I could replicate here with CREATE IF NOT EXISTS. Additionally I would need to fully qualify the tables with database.schema.table
         """
     )
     return
@@ -119,7 +119,7 @@ def _(FG_DWH, endTime, mo, windpower2023RAW):
         SELECT startTime, endTime, datetrunc('day', endTime) as "DATE", EXTRACT(DAY FROM endTime) as Day, EXTRACT(MONTH FROM endTime) as Month, "Wind power generation - 15 min data" as WindPowerGenerated
         FROM "FG_DWH".mockdashstaging.windpower2023RAW
         ORDER BY startTime ASC
-        LIMIT 5; 
+        LIMIT 5;
         """
     )
     return
@@ -286,7 +286,7 @@ def _(mo, windpower2023Agg):
         USE FG_DWH.mockdashstaging;
         SELECT *
         FROM windpower2023Agg
-        LIMIT 15; 
+        LIMIT 15;
         """
     )
     return
