@@ -61,6 +61,14 @@ def _(mo):
         This will eventually become the fact table. I'm working on the Date and Time dimensions first. 
 
         After that I will move the sources to their own dimension table.
+
+        - [x] Work on Time Dimension Table
+        - [x] Transform Raw Table for the Time Dimension Table
+        - [ ] Create Intermediate Table from Raw Table with TimeDim Key
+        - [ ] Work on Date Dimension Table
+        - [x] Transform Raw Table for Date Dimension Table
+        - [ ] Create Intermediate Table from previous intermediate table for DateDim Key
+        - [ ] Create Source Dimension Table
         """
     )
     return
