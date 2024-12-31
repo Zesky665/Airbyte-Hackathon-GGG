@@ -111,11 +111,12 @@ def _(mo):
     return
 
 
-@app.cell(disabled=True)
-def _(FG_DWH, hourminute, mo, mockdashstaging):
+@app.cell
+def _(mo):
     _df = mo.sql(
         f"""
         --Table Creation DDL
+        /*
         CREATE TABLE IF NOT EXISTS "FG_DWH".mockdashstaging.TimeDim AS 
         select DISTINCT
         strftime(hourminute, '%H%M')::SMALLINT AS TimeKey,
@@ -148,9 +149,54 @@ def _(FG_DWH, hourminute, mo, mockdashstaging):
         	SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute')) as hourminute
         	) AS DQ
         ORDER BY TimeValue
+        */
         """
     )
-    return (TimeDim,)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(
+        r"""
+        DDL for TimeDimension Table
+        ```sql
+        CREATE TABLE IF NOT EXISTS "FG_DWH".mockdashstaging.TimeDim AS 
+        select DISTINCT
+        strftime(hourminute, '%H%M')::SMALLINT AS TimeKey,
+        hourminute::TIME as TimeValue,    
+        strftime(hourminute, '%H:%M') AS TimeOfDayStr,
+        strftime(hourminute, '%H:%M %p') AS TimeOfDayStrExt,
+        	-- Hour of the day (0 - 23)
+        extract(hour from hourminute)::SMALLINT as Hour, 
+        	-- Minute of the day (0 - 1439)
+        CAST(extract(hour from hourminute)*60 + extract(minute from hourminute) as SMALLINT) as Minute,
+        	-- Extract and format quarter hours
+        strftime(hourminute - (extract(minute from hourminute)::integer % 15 || 'minutes')::interval, '%H:%M') || ' – ' ||
+        strftime(hourminute - (extract(minute from hourminute)::integer % 15 || 'minutes')::interval + '14 minutes'::interval, '%H:%M')
+        		as QuarterHour,
+        -- Names of day periods, split into quarters
+        	case when strftime(hourminute, '%H:%M') between '06:00' and '11:59'
+        		then 'Morning'
+        	     when strftime(hourminute, '%H:%M') between '12:00' and '17:59'
+        		then 'Afternoon'
+        	     when strftime(hourminute, '%H:%M') between '18:00' and '23:59'
+        		then 'Evening'
+        	     else 'Night'
+        	end as DaytimeName,
+        -- Indicator of day or night, split by half
+        	case when strftime(hourminute, '%H:%M') between '06:00' and '17:59' then 'Day'
+        	     else 'Night'
+        	end AS DayNight,
+            strftime(hourminute, '%p') as AMPM
+        FROM (
+        	SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute')) as hourminute
+        	) AS DQ
+        ORDER BY TimeValue
+        ```
+        """
+    )
+    return
 
 
 @app.cell
@@ -159,7 +205,7 @@ def _(mo):
     return
 
 
-@app.cell
+@app.cell(disabled=True)
 def _(FG_DWH, TimeDim, mo):
     _df = mo.sql(
         f"""
