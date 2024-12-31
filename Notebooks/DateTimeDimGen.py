@@ -21,9 +21,22 @@ def _(mo):
 
 
 @app.cell
+def _(mo):
+    mo.md(
+        r"""
+        ## Time Dimension Table Create
+
+        The following is the SQL Query used to create the Time Dimension Table
+        """
+    )
+    return
+
+
+@app.cell
 def _(hourminute, mo):
-    _df = mo.sql(
+    timedf = mo.sql(
         f"""
+        -- This is the Query to generate a Times Table
         -- added in an AM/PM Column and changed the DaytimeName column
         -- changed the ints to smallints to be more efficient
         -- Added the TimeKey
@@ -32,8 +45,9 @@ def _(hourminute, mo):
         -- source: https://wiki.postgresql.org/wiki/Date_and_Time_dimensions
         select DISTINCT
         strftime(hourminute, '%H%M')::SMALLINT AS TimeKey,
-        strftime(hourminute, '%H:%M') AS TimeOfDay,
-        strftime(hourminute, '%H:%M %p') AS TimeOfDayExt,
+        hourminute::TIME as TimeValue,    
+        strftime(hourminute, '%H:%M') AS TimeOfDayStr,
+        strftime(hourminute, '%H:%M %p') AS TimeOfDayStrExt,
         	-- Hour of the day (0 - 23)
         extract(hour from hourminute)::SMALLINT as Hour, 
         	-- Minute of the day (0 - 1439)
@@ -59,7 +73,18 @@ def _(hourminute, mo):
         FROM (
         	SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute')) as hourminute
         	) AS DQ
-        ORDER BY TimeOfDay
+        ORDER BY TimeValue
+        """
+    )
+    return (timedf,)
+
+
+@app.cell
+def _(mo):
+    _df = mo.sql(
+        f"""
+        --Table Creation DDL 
+
         """
     )
     return
@@ -116,11 +141,11 @@ def _(minute, mo, totalpowerraw2022_2023):
 
 @app.cell
 def _(FG_DWH, mo, totalpowerraw2022_2023):
-    _df = mo.sql(
+    rawdatedf = mo.sql(
         f"""
         -- basic transformations to breakout the start and end timestamp into a date and time seperate column 
         WITH rawtable AS (
-        SELECT startTime as startDateTime, endTime as endDateTime FROM "FG_DWH".mockdashraw.totalpowerraw2022_2023 LIMIT 10
+        SELECT startTime as startDateTime, endTime as endDateTime FROM "FG_DWH".mockdashraw.totalpowerraw2022_2023 USING SAMPLE 500
             )
         SELECT startDateTime, 
         startDateTime::DATE as startDate,
@@ -131,16 +156,17 @@ def _(FG_DWH, mo, totalpowerraw2022_2023):
         FROM rawtable
         """
     )
-    return
+    return (rawdatedf,)
 
 
 @app.cell
-def _(mo, rawdatedf, timedf):
+def _(mo):
     _df = mo.sql(
         f"""
-        SELECT startTime, startDate, timedf."TimeKey" 
-        from rawdatedf 
-        inner join timedf ON rawdatedf."startTime" = timedf."TimeOfDay"
+        -- Quick Exploration setting the previous two outputs assigning to variables. Used to double check the Join of the Date Dimension to the Fact Table. 
+        --SUMMARIZE SELECT startTime, startDate, timedf."TimeKey" 
+        --from rawdatedf 
+        --inner join timedf ON rawdatedf."startTime" = timedf."TimeOfDay"
         """
     )
     return
@@ -187,7 +213,26 @@ def _(FG_DWH, mo, totalpowerraw2022_2023):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""DuckDB doesn't support converting a time data type to text. the function strftime only takes DATE or TIMESTAMP but not Time""")
+    mo.md(
+        r"""
+        DuckDB doesn't support converting a time data type to text. the function strftime only takes DATE or TIMESTAMP but not Time
+
+        Generate Series does not take the TIME Data Type only TIMESTAMP or DATE
+        """
+    )
+    return
+
+
+@app.cell
+def _(mo):
+    _df = mo.sql(
+        f"""
+        SELECT hourminute::TIME
+        FROM (
+        	SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute')) as hourminute
+        	) AS DQ
+        """
+    )
     return
 
 
