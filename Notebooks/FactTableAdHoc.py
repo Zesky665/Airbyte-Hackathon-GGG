@@ -53,6 +53,20 @@ def _(mo):
 
 
 @app.cell
+def _(mo):
+    mo.md(
+        r"""
+        ### Initial Draft of the intermediate table
+
+        This will eventually become the fact table. I'm working on the Date and Time dimensions first. 
+
+        After that I will move the sources to their own dimension table. 
+        """
+    )
+    return
+
+
+@app.cell
 def _(FG_DWH, mo, totalpowerraw2022_2023):
     testdf = mo.sql(
         f"""
