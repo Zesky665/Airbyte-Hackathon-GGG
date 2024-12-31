@@ -24,6 +24,23 @@ the data will be stored in a Motherduck dwh and presented using a Streamlit app.
 #### Infrastructure 
 - Terraform
 
+## Development
+
+Instructions for setting up the project:
+
+### Dependencies
+
+Dependencies are managed by [uv](https://docs.astral.sh/uv/).
+To install dependencies run:
+```shell
+uv sync
+```
+
+### Database connection
+
+First [generate an access token](https://motherduck.com/docs/key-tasks/authenticating-and-connecting-to-motherduck/authenticating-to-motherduck/) in MotherDuck.
+Store the token in a `.env` file as `MOTHERDUCK_TOKEN`.
+
 ## The Team
  - Zharko Cekovski aka Zesky665
  - Jonathan Biemond aka jonbiemond
