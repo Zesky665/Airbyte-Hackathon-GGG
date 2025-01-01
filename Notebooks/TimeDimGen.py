@@ -1,7 +1,13 @@
 import marimo
 
-__generated_with = "0.10.8"
+__generated_with = "0.10.9"
 app = marimo.App(width="full")
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""# Time Dimension Notebook""")
+    return
 
 
 @app.cell
@@ -20,7 +26,7 @@ def _(mo):
     return (FG_DWH,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(
         r"""
@@ -93,7 +99,7 @@ def _(mo):
 
         Actually [Microsoft](https://learn.microsoft.com/en-us/fabric/data-warehouse/dimensional-modeling-dimension-tables) mentions just using a date dimension generator [like this one](https://dimdates.com/)
 
-        Kimball has some posts about the Time Dimension Table: [note 1](https://www.kimballgroup.com/2004/02/design-tip-51-latest-thinking-on-time-dimension-tables/) and [note 2](https://www.kimballgroup.com/1997/07/its-time-for-time/) among others that can be googled. 
+        Kimball has some posts about the Time Dimension Table: [note 1](https://www.kimballgroup.com/2004/02/design-tip-51-latest-thinking-on-time-dimension-tables/) and [note 2](https://www.kimballgroup.com/1997/07/its-time-for-time/) among others that can be googled.
         """
     )
     return
@@ -306,18 +312,8 @@ def _(mo):
 
         I need to break out the startTime and endTime columns into 4 columns, two date and two time columns.
 
-        - [ ] Create Time Dimension Key 
+        - [x] Create Time Dimension Key 
         - [ ] Breakout Columns in the Fact Table to prepare to add the keys
-        """
-    )
-    return
-
-
-@app.cell
-def _(FG_DWH, mo, totalpowerraw2022_2023):
-    _df = mo.sql(
-        f"""
-        SELECT * FROM FG_DWH.mockdashraw.totalpowerraw2022_2023 ORDER BY endTime LIMIT 10 OFFSET 100
         """
     )
     return
@@ -333,11 +329,6 @@ def _(mo):
         	) AS DQ
         """
     )
-    return
-
-
-@app.cell
-def _():
     return
 
 
