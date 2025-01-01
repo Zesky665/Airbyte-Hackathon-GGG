@@ -12,7 +12,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md("""## Summary Statistics and Schema Information """)
+    mo.md("""## Summary Statistics and Schema Information""")
     return
 
 
@@ -36,11 +36,11 @@ def _(datedimschema, fctschema, mo, sourcedimschema, timedimschema):
 
 
 @app.cell(hide_code=True)
-def _(datedimschema, fctsumstat, mo, sourcesumstat, timesumstat):
+def _(datesumstat, fctsumstat, mo, sourcesumstat, timesumstat):
     _tab1 = fctsumstat
     _tab3 = timesumstat
     _tab4 = sourcesumstat
-    _tab2 = datedimschema
+    _tab2 = datesumstat
     sumtabs = mo.ui.tabs({
         "Fact Table Summary Statistics": _tab1,
         "Date Dimension Summary Statistics": _tab2,
@@ -55,127 +55,132 @@ def _(datedimschema, fctsumstat, mo, sourcesumstat, timesumstat):
 
 
 @app.cell(hide_code=True)
-def _(fctpower, mo):
-    _fctdf = mo.sql(
+def _(fctschema, mo):
+    _df = mo.sql(
         f"""
         DESCRIBE TABLE "FG_DWH".mockdashstaging.fctpower
+                \"""
+            )
+        fctschema = mo.ui.table(data=_df)
+        mo.md(f\"""### Fact Table Schema
+            {fctschema}
         """
     )
-    fctschema = mo.ui.table(data=_fctdf)
-    mo.md(f"""### Fact Table Schema
-    {fctschema} """)
-    return (fctschema,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(mo, sourcedim):
+def _(mo, sourcedimschema):
     _df = mo.sql(
         f"""
         DESCRIBE TABLE "FG_DWH".mockdashstaging.sourcedim
+                \"""
+            )
+        sourcedimschema = mo.ui.table(data=_df)
+        mo.md(
+                f\"""
+                ### Source Dimension Table Schema
+                {sourcedimschema}
         """
     )
-    sourcedimschema = mo.ui.table(data=_df)
-    mo.md(
-        f"""
-        ### Source Dimension Table Schema
-        {sourcedimschema}
-        """
-    )
-    return (sourcedimschema,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(DateDim, mo):
+def _(datedimschema, mo):
     _df = mo.sql(
         f"""
         DESCRIBE TABLE "FG_DWH".mockdashstaging."DateDim"
+                \"""
+            )
+        datedimschema = mo.ui.table(data=_df)
+        mo.md(
+                f\"""
+                ### Date Dimension Table Schema
+                {datedimschema}
         """
     )
-    datedimschema = mo.ui.table(data=_df)
-    mo.md(
-        f"""
-        ### Date Dimension Table Schema
-        {datedimschema}
-        """
-    )
-    return (datedimschema,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(TimeDim, mo):
+def _(mo, timedimschema):
     _df = mo.sql(
         f"""
         DESCRIBE TABLE "FG_DWH".mockdashstaging."TimeDim"
+                \"""
+            )
+        timedimschema = mo.ui.table(data=_df)
+        mo.md(
+                f\"""
+                ### Time Dimension Table Schema
+                {timedimschema}
         """
     )
-    timedimschema = mo.ui.table(data=_df)
-    mo.md(
-        f"""
-        ### Time Dimension Table Schema
-        {timedimschema}
-        """
-    )
-    return (timedimschema,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(FG_DWH, fctpower, mo):
+def _(fctsumstat, mo):
     _df = mo.sql(
         f"""
         SUMMARIZE SELECT * FROM "FG_DWH".mockdashstaging.fctpower
+            \"""
+        )
+        fctsumstat = mo.ui.table(_df)
+        mo.md(f\"""
+        #### Power Fact Table Summary Statistics
+        {fctsumstat}
         """
     )
-    fctsumstat = mo.ui.table(_df)
-    mo.md(f"""
-    #### Power Fact Table Summary Statistics
-    {fctsumstat}
-    """)
-    return (fctsumstat,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(DateDim, FG_DWH, mo):
+def _(datesumstat, mo):
     _df = mo.sql(
         f"""
         SUMMARIZE SELECT * FROM "FG_DWH".mockdashstaging."DateDim"
+            \"""
+        )
+        datesumstat = mo.ui.table(_df)
+        mo.md(f\"""
+        #### Date Dimension Table Summary Statistics
+        {datesumstat}
         """
     )
-    datesumstat = mo.ui.table(_df)
-    mo.md(f"""
-    #### Power Fact Table Summary Statistics
-    {datesumstat}
-    """)
-    return (datesumstat,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(FG_DWH, Timedim, mo):
+def _(mo, timesumstat):
     _df = mo.sql(
         f"""
         SUMMARIZE SELECT * FROM "FG_DWH".mockdashstaging."Timedim"
+                \""")
+        timesumstat= mo.ui.table(_df)
+        mo.md(f\"""
+            #### Time Dimension Table Summary Statistics
+            {timesumstat}
         """
     )
-    timesumstat= mo.ui.table(_df)
-    mo.md(f"""
-    #### Power Fact Table Summary Statistics
-    {timesumstat}
-    """)
-    return (timesumstat,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(FG_DWH, mo, sourcedim):
+def _(mo, sourcesumstat):
     _df = mo.sql(
         f"""
         SUMMARIZE SELECT * FROM "FG_DWH".mockdashstaging."sourcedim"
+            \"""
+            )
+        sourcesumstat = mo.ui.table(_df)
+        mo.md(f\"""
+        #### Source Dimension Table Summary Statistics
+        {sourcesumstat}
         """
     )
-    sourcesumstat = mo.ui.table(_df)
-    mo.md(f"""
-    #### Power Fact Table Summary Statistics
-    {sourcesumstat}
-    """)
-    return (sourcesumstat,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -200,12 +205,12 @@ def _(fctdf, mo):
 
 @app.cell
 def _(FG_DWH, fctpower, mo):
-    _df = mo.sql(
+    fctdf = mo.sql(
         f"""
         SELECT * FROM "FG_DWH".mockdashstaging.fctpower USING SAMPLE 100;
         """
     )
-    return
+    return (fctdf,)
 
 
 @app.cell
@@ -235,11 +240,6 @@ def _(FG_DWH, mo, sourcedim):
         SELECT * FROM "FG_DWH".mockdashstaging.sourcedim;
         """
     )
-    return
-
-
-@app.cell
-def _():
     return
 
 
