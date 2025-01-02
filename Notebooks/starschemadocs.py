@@ -6,6 +6,24 @@ app = marimo.App(width="full")
 
 @app.cell(hide_code=True)
 def _(mo):
+    _df = mo.sql(
+        f"""
+        ATTACH IF NOT EXISTS 'md:FG_DWH'
+        """,
+        output=False,
+    )
+    return (FG_DWH,)
+
+
+@app.cell(hide_code=True)
+def _():
+    import marimo as mo
+    import pandas
+    return mo, pandas
+
+
+@app.cell(hide_code=True)
+def _(mo):
     mo.md(r"""# Star Schema Documentation""")
     return
 
@@ -55,132 +73,165 @@ def _(datesumstat, fctsumstat, mo, sourcesumstat, timesumstat):
 
 
 @app.cell(hide_code=True)
-def _(fctschema, mo):
-    _df = mo.sql(
+def _(fctpower, mo):
+    fddf = mo.sql(
         f"""
         DESCRIBE TABLE "FG_DWH".mockdashstaging.fctpower
-                \"""
-            )
-        fctschema = mo.ui.table(data=_df)
-        mo.md(f\"""### Fact Table Schema
-            {fctschema}
-        """
+        """,
+        output=False,
     )
-    return
+    return (fddf,)
 
 
 @app.cell(hide_code=True)
-def _(mo, sourcedimschema):
-    _df = mo.sql(
+def _(fddf, mo):
+    fctschema = mo.ui.table(data=fddf)
+    mo.md(f"""### Fact Table Schema
+        {fctschema}""")
+    return (fctschema,)
+
+
+@app.cell(hide_code=True)
+def _(mo, sourcedim):
+    sddf = mo.sql(
         f"""
         DESCRIBE TABLE "FG_DWH".mockdashstaging.sourcedim
-                \"""
-            )
-        sourcedimschema = mo.ui.table(data=_df)
-        mo.md(
-                f\"""
-                ### Source Dimension Table Schema
-                {sourcedimschema}
-        """
+        """,
+        output=False,
     )
-    return
+    return (sddf,)
 
 
 @app.cell(hide_code=True)
-def _(datedimschema, mo):
-    _df = mo.sql(
+def _(mo, sddf):
+    sourcedimschema = mo.ui.table(data=sddf)
+    mo.md(
+            f"""
+            ### Source Dimension Table Schema
+            {sourcedimschema}""")
+    return (sourcedimschema,)
+
+
+@app.cell(hide_code=True)
+def _(DateDim, mo):
+    dddf = mo.sql(
         f"""
         DESCRIBE TABLE "FG_DWH".mockdashstaging."DateDim"
-                \"""
-            )
-        datedimschema = mo.ui.table(data=_df)
-        mo.md(
-                f\"""
-                ### Date Dimension Table Schema
-                {datedimschema}
-        """
+        """,
+        output=False,
     )
-    return
+    return (dddf,)
 
 
 @app.cell(hide_code=True)
-def _(mo, timedimschema):
-    _df = mo.sql(
+def _(dddf, mo):
+    datedimschema = mo.ui.table(data=dddf)
+    mo.md(
+            f"""
+            ### Date Dimension Table Schema
+            {datedimschema}""")
+    return (datedimschema,)
+
+
+@app.cell(hide_code=True)
+def _(TimeDim, mo):
+    tddf = mo.sql(
         f"""
         DESCRIBE TABLE "FG_DWH".mockdashstaging."TimeDim"
-                \"""
-            )
-        timedimschema = mo.ui.table(data=_df)
-        mo.md(
-                f\"""
-                ### Time Dimension Table Schema
-                {timedimschema}
-        """
+        """,
+        output=False,
     )
-    return
+    return (tddf,)
 
 
 @app.cell(hide_code=True)
-def _(fctsumstat, mo):
-    _df = mo.sql(
+def _(mo, tddf):
+    timedimschema = mo.ui.table(data=tddf)
+    mo.md(
+            f"""
+            ### Time Dimension Table Schema
+            {timedimschema}""")
+    return (timedimschema,)
+
+
+@app.cell(hide_code=True)
+def _(FG_DWH, fctpower, mo):
+    fsdf = mo.sql(
         f"""
         SUMMARIZE SELECT * FROM "FG_DWH".mockdashstaging.fctpower
-            \"""
-        )
-        fctsumstat = mo.ui.table(_df)
-        mo.md(f\"""
-        #### Power Fact Table Summary Statistics
-        {fctsumstat}
-        """
+        """,
+        output=False,
     )
-    return
+    return (fsdf,)
 
 
 @app.cell(hide_code=True)
-def _(datesumstat, mo):
-    _df = mo.sql(
+def _(fsdf, mo):
+    fctsumstat = mo.ui.table(fsdf)
+    mo.md(f"""
+    #### Power Fact Table Summary Statistics
+    {fctsumstat}""")
+    return (fctsumstat,)
+
+
+@app.cell(hide_code=True)
+def _(DateDim, FG_DWH, mo):
+    dsdf = mo.sql(
         f"""
         SUMMARIZE SELECT * FROM "FG_DWH".mockdashstaging."DateDim"
-            \"""
-        )
-        datesumstat = mo.ui.table(_df)
-        mo.md(f\"""
-        #### Date Dimension Table Summary Statistics
-        {datesumstat}
-        """
+        """,
+        output=False,
     )
-    return
+    return (dsdf,)
 
 
 @app.cell(hide_code=True)
-def _(mo, timesumstat):
-    _df = mo.sql(
+def _(dsdf, mo):
+    datesumstat = mo.ui.table(dsdf)
+    mo.md(f"""
+    #### Date Dimension Table Summary Statistics
+    {datesumstat}""")
+    return (datesumstat,)
+
+
+@app.cell(hide_code=True)
+def _(FG_DWH, Timedim, mo):
+    tsdf = mo.sql(
         f"""
         SUMMARIZE SELECT * FROM "FG_DWH".mockdashstaging."Timedim"
-                \""")
-        timesumstat= mo.ui.table(_df)
-        mo.md(f\"""
-            #### Time Dimension Table Summary Statistics
-            {timesumstat}
-        """
+        """,
+        output=False,
     )
-    return
+    return (tsdf,)
 
 
 @app.cell(hide_code=True)
-def _(mo, sourcesumstat):
-    _df = mo.sql(
+def _(mo, tsdf):
+    timesumstat= mo.ui.table(tsdf)
+    mo.md(f"""
+        #### Time Dimension Table Summary Statistics
+        {timesumstat}""")
+    return (timesumstat,)
+
+
+@app.cell(hide_code=True)
+def _(FG_DWH, mo, sourcedim):
+    sourcesumdf = mo.sql(
         f"""
         SUMMARIZE SELECT * FROM "FG_DWH".mockdashstaging."sourcedim"
-            \"""
-            )
-        sourcesumstat = mo.ui.table(_df)
-        mo.md(f\"""
-        #### Source Dimension Table Summary Statistics
-        {sourcesumstat}
-        """
+        """,
+        output=False,
     )
-    return
+    return (sourcesumdf,)
+
+
+@app.cell(hide_code=True)
+def _(mo, sourcesumdf):
+    sourcesumstat = mo.ui.table(sourcesumdf)
+    mo.md(f"""
+    #### Source Dimension Table Summary Statistics
+    {sourcesumstat}""")
+    return (sourcesumstat,)
 
 
 @app.cell(hide_code=True)
@@ -241,23 +292,6 @@ def _(FG_DWH, mo, sourcedim):
         """
     )
     return
-
-
-@app.cell
-def _():
-    import marimo as mo
-    import pandas
-    return mo, pandas
-
-
-@app.cell
-def _(mo):
-    _df = mo.sql(
-        f"""
-        ATTACH IF NOT EXISTS 'md:FG_DWH'
-        """
-    )
-    return (FG_DWH,)
 
 
 if __name__ == "__main__":
