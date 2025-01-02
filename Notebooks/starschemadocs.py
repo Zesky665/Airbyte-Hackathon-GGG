@@ -30,7 +30,19 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
+    mo.image(src="./Notebooks/starschemadiagram.png")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
     mo.md("""## Summary Statistics and Schema Information""")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""### Schema Tables""")
     return
 
 
@@ -54,25 +66,6 @@ def _(datedimschema, fctschema, mo, sourcedimschema, timedimschema):
 
 
 @app.cell(hide_code=True)
-def _(datesumstat, fctsumstat, mo, sourcesumstat, timesumstat):
-    _tab1 = fctsumstat
-    _tab3 = timesumstat
-    _tab4 = sourcesumstat
-    _tab2 = datesumstat
-    sumtabs = mo.ui.tabs({
-        "Fact Table Summary Statistics": _tab1,
-        "Date Dimension Summary Statistics": _tab2,
-        "Time Dimension Summary Statistics": _tab3,
-        "Source Dimension Summary Statistics": _tab4
-    })
-    mo.md(f"""
-    #### All Schema Tables Summary Statistics
-    {sumtabs}
-    """)
-    return (sumtabs,)
-
-
-@app.cell(hide_code=True)
 def _(fctpower, mo):
     fddf = mo.sql(
         f"""
@@ -86,7 +79,7 @@ def _(fctpower, mo):
 @app.cell(hide_code=True)
 def _(fddf, mo):
     fctschema = mo.ui.table(data=fddf)
-    mo.md(f"""### Fact Table Schema
+    mo.md(f"""#### Fact Table Schema
         {fctschema}""")
     return (fctschema,)
 
@@ -107,7 +100,7 @@ def _(mo, sddf):
     sourcedimschema = mo.ui.table(data=sddf)
     mo.md(
             f"""
-            ### Source Dimension Table Schema
+            #### Source Dimension Table Schema
             {sourcedimschema}""")
     return (sourcedimschema,)
 
@@ -128,7 +121,7 @@ def _(dddf, mo):
     datedimschema = mo.ui.table(data=dddf)
     mo.md(
             f"""
-            ### Date Dimension Table Schema
+            #### Date Dimension Table Schema
             {datedimschema}""")
     return (datedimschema,)
 
@@ -149,9 +142,34 @@ def _(mo, tddf):
     timedimschema = mo.ui.table(data=tddf)
     mo.md(
             f"""
-            ### Time Dimension Table Schema
+            #### Time Dimension Table Schema
             {timedimschema}""")
     return (timedimschema,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""### Summary Statistic Tables""")
+    return
+
+
+@app.cell(hide_code=True)
+def _(datesumstat, fctsumstat, mo, sourcesumstat, timesumstat):
+    _tab1 = fctsumstat
+    _tab3 = timesumstat
+    _tab4 = sourcesumstat
+    _tab2 = datesumstat
+    sumtabs = mo.ui.tabs({
+        "Fact Table Summary Statistics": _tab1,
+        "Date Dimension Summary Statistics": _tab2,
+        "Time Dimension Summary Statistics": _tab3,
+        "Source Dimension Summary Statistics": _tab4
+    })
+    mo.md(f"""
+    #### All Schema Tables Summary Statistics
+    {sumtabs}
+    """)
+    return (sumtabs,)
 
 
 @app.cell(hide_code=True)
