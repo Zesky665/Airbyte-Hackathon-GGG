@@ -168,7 +168,7 @@ def _(FG_DWH, mo, tempallpower2022_2023):
 
 @app.cell
 def _(FG_DWH, mo, tempallpower2022_2023):
-    _df = mo.sql(
+    datenulldf = mo.sql(
         f"""
         WITH nulltable as (SELECT * FROM "FG_DWH".mockdashstaging.tempallpower2022_2023
         WHERE NuclearPowerGenerated IS NULL 
@@ -180,7 +180,7 @@ def _(FG_DWH, mo, tempallpower2022_2023):
         GROUP BY GeneratedAtDate
         """
     )
-    return
+    return (datenulldf,)
 
 
 @app.cell
@@ -189,7 +189,7 @@ def _(datenulldf, mo):
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""## Star Schema Joins""")
     return
@@ -231,7 +231,7 @@ def _(
 def _(FG_DWH, fctpower, mo):
     _df = mo.sql(
         f"""
-        SELECT * FROM "FG_DWH".mockdashstaging.fctpower WHERE GeneratedPower IS NULL  
+        SELECT * FROM "FG_DWH".mockdashstaging.fctpower WHERE GeneratedPower IS NULL
         """
     )
     return

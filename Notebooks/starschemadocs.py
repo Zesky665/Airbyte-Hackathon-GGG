@@ -30,6 +30,12 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
+    mo.image(src="./Notebooks/starschemadiagram.png")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
     mo.md("""## Summary Statistics and Schema Information""")
     return
 
