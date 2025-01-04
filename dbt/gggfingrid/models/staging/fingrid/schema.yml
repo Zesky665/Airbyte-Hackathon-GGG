@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: src_fingrid_model
+    description: "The source data from the FinGrid"
+#    columns:
+#      - name: id
+#        description: "The primary key for this table"
+#        data_tests:
+#          - unique
+#          - not_null

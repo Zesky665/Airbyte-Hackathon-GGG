@@ -31,5 +31,5 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   gggfingrid:
     # Config indicated by + and applies to all files under models/example/
-    example:
+    staging:
       +materialized: view
