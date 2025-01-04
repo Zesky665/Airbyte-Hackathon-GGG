@@ -20,6 +20,17 @@ the data will be stored in a Motherduck DWH and presented using a Streamlit app.
 #### Infrastructure 
 - Terraform
 
+## Roadmap
+
+A rough outline of our goals for the project.
+
+### Phase 1: A Viable Product
+
+- [ ] Create connection to the four primary energy generation datasets with MotherDuck.
+- [ ] Create a data warehouse with staging and modeled layers.
+- [ ] Orchestrate and automate extraction, loading and transformation.
+- [ ] Add visualizations and analytics.
+
 ## Development
 
 Instructions for setting up the project:
