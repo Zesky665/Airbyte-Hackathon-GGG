@@ -34,7 +34,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.image(src="Notebooks/connectionstring.png")
+    mo.image(src="Notebooks/connectiontest/connectionstring.png")
     return
 
 
