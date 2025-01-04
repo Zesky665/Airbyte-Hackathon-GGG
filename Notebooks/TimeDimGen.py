@@ -79,7 +79,7 @@ def _(hourminute, mo):
             strftime(hourminute, '%p') as AMPM
         FROM (
         	SELECT unnest(generate_series(TIMESTAMP without TIME zone '2016-10-16', TIMESTAMP without TIME zone '2016-10-17', '1 minute')) as hourminute
-        	) AS DQ
+        	) AS TQ
         ORDER BY TimeValue
         """
     )

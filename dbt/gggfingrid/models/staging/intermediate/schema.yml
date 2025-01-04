@@ -1,0 +1,6 @@
+version: 2
+
+models:
+  - name: stg_fingrid
+    description: Source Table with StartTime column dropped and the Power Columns renamed, and the endTime column used to generated a GeneratedDate and GeneratedTIme Column
+  - name: stg_piv_fingrid

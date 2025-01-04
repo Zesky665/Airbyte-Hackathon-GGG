@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: src_fingrid_model
-    description: "The source data from the FinGrid"
+    description: "The source data from the FinGrid, is a replica of the table"
 #    columns:
 #      - name: id
 #        description: "The primary key for this table"
