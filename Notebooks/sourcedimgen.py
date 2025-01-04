@@ -72,7 +72,7 @@ def _(mo):
         r"""
         I did not limit the number on the UNPIVOT. 
 
-        Let me calculate how much the unpivot will be (number of rows) * (number of sources). Currently we have 4 sources and 353702 rows 
+        Let me calculate how much the unpivot will be (number of rows) * (number of sources). Currently we have 4 sources and 353702 rows
         """
     )
     return
@@ -131,7 +131,7 @@ def _(mo):
 
 @app.cell
 def _(mo):
-    mo.md(r"""Having problems with the ID Sequence Generation """)
+    mo.md(r"""Having problems with the ID Sequence Generation""")
     return
 
 

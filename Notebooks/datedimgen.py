@@ -12,7 +12,7 @@ def _(mo):
 
 @app.cell
 def _():
-    import marimo as mo 
+    import marimo as mo
     return (mo,)
 
 
@@ -72,7 +72,7 @@ def _(mo):
         r"""
         Much simpler thanks to what I learned from the TimeDim table and using DuckDBs date format functions
 
-        Changed the DDL to include for more efficient data types 
+        Changed the DDL to include for more efficient data types
         """
     )
     return

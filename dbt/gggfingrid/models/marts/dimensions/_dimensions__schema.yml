@@ -1,0 +1,11 @@
+version: 2
+
+models: 
+    - name: DimTime
+      description: Time Dimension Table
+
+    - name: DimDate
+      description: Date Dimension Table
+      
+    - name: DimSource
+      description: Source Dimension Table

@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: fingrid
+    database: FG_DWH
+    schema: mockdashraw
+    tables:
+      - name: totalpowerraw2022_2023

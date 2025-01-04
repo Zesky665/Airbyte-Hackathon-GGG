@@ -324,7 +324,7 @@ def _(FG_DWH, mo, v_powerandtime):
 
 @app.cell
 def _(mo):
-    mo.md(r"""Now the same process for the Date Key """)
+    mo.md(r"""Now the same process for the Date Key""")
     return
 
 
@@ -393,7 +393,7 @@ def _(mo, v_powerdatetime):
 
 @app.cell
 def _(mo):
-    mo.md(r"""Just noticed I didn't make the datekey a small int. Just went and changed it in the DDL. """)
+    mo.md(r"""Just noticed I didn't make the datekey a small int. Just went and changed it in the DDL.""")
     return
 
 
@@ -426,7 +426,7 @@ def _():
 
 @app.cell
 def _(mo):
-    mo.md(r"""### Create the Unpivot of the raw table and create a new source dim key connection """)
+    mo.md(r"""### Create the Unpivot of the raw table and create a new source dim key connection""")
     return
 
 
@@ -442,7 +442,7 @@ def _(FG_DWH, mo, mockdashstaging):
             NAME Source
             VALUE GeneratedPower)
         SELECT * 
-        FROM unpiv 
+        FROM unpiv
         """
     )
     return (v_powerunpivot,)
