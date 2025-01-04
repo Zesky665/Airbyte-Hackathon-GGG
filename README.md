@@ -1,19 +1,15 @@
-# Airbyte-Hackathon-GGG
-The Airbyte+Motherduck hackathon project by the Green Grid Geeks team. 
-
-
 ## The Project 
 A data app that tracks the energy economy in finland. This will be accomplished by 
 querying data from [Fingrid](https://data.fingrid.fi/en/datasets).
-The data will be accessed in 15min intervals from the API using Airbyte, 
-the data will be stored in a Motherduck dwh and presented using a Streamlit app. 
+The data will be accessed in 15min intervals from the API using dlt, 
+the data will be stored in a Motherduck DWH and presented using a Streamlit app. 
 
 ## The Tech Stack
 
 [INSERT DIAGRAM HERE]
 
 #### Ingestion
-- Airbyte
+- dlt
 
 #### Storage
 - Motherduck
