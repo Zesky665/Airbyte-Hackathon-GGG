@@ -3,6 +3,9 @@ version: 2
 sources:
   - name: fingrid
     database: FG_DWH
-    schema: mockdashraw
+    schema: landing
     tables:
-      - name: totalpowerraw2022_2023
+      - name: TotalElectricityProductionRaw
+      - name: WindProductionRaw
+      - name: NuclearProductionRaw
+      - name: HydroProductionRaw
