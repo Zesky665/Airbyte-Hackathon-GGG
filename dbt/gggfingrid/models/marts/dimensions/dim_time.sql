@@ -25,6 +25,6 @@ FROM (
 	) AS TQ
 )
 SELECT 
-{{dbt_utils.generate_surrogate_key(['time_value'])}} as TimeKey,
+{{dbt_utils.generate_surrogate_key(['time_value'])}} as time_key,
 timegentable.*
 FROM timegentable

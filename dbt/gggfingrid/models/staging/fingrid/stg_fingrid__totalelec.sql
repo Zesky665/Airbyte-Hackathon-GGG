@@ -5,6 +5,7 @@ renamed as (
     endTime::TIME as generated_at_time,
     "Electricity production in Finland - real time data" as source_value,
     'Total Electricity Production' as source_name  
+    FROM base
 )
 SELECT * 
 FROM renamed 

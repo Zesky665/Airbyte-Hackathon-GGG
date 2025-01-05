@@ -170,3 +170,5 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+dbt/gggfingrid/.vscode/settings.json
+dbt/gggfingrid/.user.yml
