@@ -6,6 +6,18 @@ renamed as (
     "Electricity production in Finland - real time data" as source_value,
     'Total Electricity Production' as source_name  
     FROM base
+), 
+null_filter_and_deduped as (
+SELECT DISTINCT 
+generated_at_date,
+generated_at_time,
+source_value,
+source_name
+FROM renamed 
+WHERE generated_at_date IS NOT NULL 
+AND generated_at_time IS NOT NULL 
+AND source_value IS NOT NULL 
+AND source_name IS NOT NULL 
 )
 SELECT * 
-FROM renamed 
+FROM null_filter_and_deduped 
