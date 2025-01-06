@@ -2,10 +2,10 @@ version: 2
 
 models:
   - name: stg_fingrid__hydro
-    description: "The source data from the FinGrid, is a replica of the table"
-#    columns:
-#      - name: id
-#        description: "The primary key for this table"
+    description: The source data from the FinGrid, is a staging model that drops the startTIme field as it is identical to the endTime field, and adds a source identifier column
+    columns:
+      - name: id
+        description: The primary key for this table
 #        data_tests:
 #          - unique
 #          - not_null

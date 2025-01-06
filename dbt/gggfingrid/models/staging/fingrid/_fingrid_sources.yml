@@ -2,10 +2,15 @@ version: 2
 
 sources:
   - name: fingrid
+    description: Landing Zone for data from the FinGrid API
     database: FG_DWH
     schema: landing
     tables:
       - name: TotalElectricityProductionRaw
+        description: Total Energy Production in Finland from 2015 onwards, an aggregate of both Renewable and Non-renewable sources 
       - name: WindProductionRaw
+        description: Energy production in Finland from 2015 produced by Wind powered energy sources
       - name: NuclearProductionRaw
+        description: Energy production in Finland from 2015 produced by Nuclear powered energy sources
       - name: HydroProductionRaw
+        description: Energy production in Finland from 2015 produced by Hydroelectric powered energy sources
