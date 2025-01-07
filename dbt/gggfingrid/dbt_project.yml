@@ -35,3 +35,11 @@ models:
       +materialized: view
     marts:
       +materialized: table
+      dimensions:
+        +docs: 
+          node_color: "purple"
+        +tags: "dimensions"
+      energy_production:
+        +docs:
+          node_color: "orange"
+        +tags: "facts"

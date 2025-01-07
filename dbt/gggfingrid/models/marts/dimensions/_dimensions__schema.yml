@@ -1,11 +1,29 @@
 version: 2
 
 models: 
-    - name: DimTime
+    - name: dim_time
       description: Time Dimension Table
+      columns: 
+        - name: time_key
+          description: Primary Key 
+          data_tests:
+            - unique 
+            - not_null
 
-    - name: DimDate
+    - name: dim_date
       description: Date Dimension Table
+      columns: 
+        - name: date_key
+          description: Primary Key 
+          data_tests:
+            - unique 
+            - not_null
       
-    - name: DimSource
+    - name: dim_sources
       description: Source Dimension Table
+      columns: 
+        - name: source_key
+          description: Primary Key 
+          data_tests:
+            - unique 
+            - not_null

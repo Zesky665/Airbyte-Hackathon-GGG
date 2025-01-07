@@ -1,11 +1,98 @@
 version: 2
 
 models:
-  - name: src_fingrid_model
-    description: "The source data from the FinGrid, is a replica of the table"
-#    columns:
-#      - name: id
-#        description: "The primary key for this table"
-#        data_tests:
-#          - unique
-#          - not_null
+  - name: stg_fingrid__hydro
+    description: >
+      The source data from the FinGrid, is a staging model that drops the startTIme field as it is identical to the endTime field, and adds a source identifier column.
+      The source data is Deduplicated and all columns are filtered with Not Null checks. This is for the Hydroelectric Electricy Production Data.
+    columns:
+      - name: generated_at_date
+        description: From the endTime field of the source table. Breaks out the DateTime to a Date column with a cast. Part of the eventual primary key downstream
+        data_tests: 
+          - not_null
+      - name: generated_at_time
+        description: From the endTime field of the source table. Breaks out the DateTime to a TIME column with a cast. Part of the eventual primary key downstream
+        data_tests: 
+          - not_null      
+      - name: source_value
+        description: Power generated in Megawatts (MW) of the source type. This value is Averaged due to data quality errors observed
+        data_tests: 
+          - not_null
+      - name: source_name 
+        description: Name of the source
+        data_tests: 
+          - not_null
+          - accepted_values: 
+              values: ['Hydroelectric Power Production']
+
+  - name: stg_fingrid__nuclear
+    description: >
+      The source data from the FinGrid, is a staging model that drops the startTIme field as it is identical to the endTime field, and adds a source identifier column.
+      The source data is Deduplicated and all columns are filtered with Not Null checks. This is for the Nuclear Electricy Production Data.
+    columns:
+      - name: generated_at_date
+        description: From the endTime field of the source table. Breaks out the DateTime to a Date column with a cast. Part of the eventual primary key downstream
+        data_tests: 
+          - not_null
+      - name: generated_at_time
+        description: From the endTime field of the source table. Breaks out the DateTime to a TIME column with a cast. Part of the eventual primary key downstream
+        data_tests: 
+          - not_null      
+      - name: source_value
+        description: Power generated in Megawatts (MW) of the source type. This value is Averaged due to data quality errors observed
+        data_tests: 
+          - not_null
+      - name: source_name 
+        description: Name of the source
+        data_tests: 
+          - not_null
+          - accepted_values: 
+              values: ['Nuclear Power Production']
+
+  - name: stg_fingrid__totalelec
+    description: >
+      The source data from the FinGrid, is a staging model that drops the startTIme field as it is identical to the endTime field, and adds a source identifier column.
+      The source data is Deduplicated and all columns are filtered with Not Null checks. This is for the all of the sources combined Electricy Production Data.
+    columns:
+      - name: generated_at_date
+        description: From the endTime field of the source table. Breaks out the DateTime to a Date column with a cast. Part of the eventual primary key downstream
+        data_tests: 
+          - not_null
+      - name: generated_at_time
+        description: From the endTime field of the source table. Breaks out the DateTime to a TIME column with a cast. Part of the eventual primary key downstream
+        data_tests: 
+          - not_null      
+      - name: source_value
+        description: Power generated in Megawatts (MW) of the source type. This value is Averaged due to data quality errors observed
+        data_tests: 
+          - not_null
+      - name: source_name 
+        description: Name of the source
+        data_tests: 
+          - not_null
+          - accepted_values: 
+              values: ['Total Electricity Production']
+
+  - name: stg_fingrid__wind
+    description: > 
+      The source data from the FinGrid, is a staging model that drops the startTIme field as it is identical to the endTime field, and adds a source identifier column.
+      The source data is Deduplicated and all columns are filtered with Not Null checks. This is for the Wind based Electricy Production Data.
+    columns:
+      - name: generated_at_date
+        description: From the endTime field of the source table. Breaks out the DateTime to a Date column with a cast. Part of the eventual primary key downstream
+        data_tests: 
+          - not_null
+      - name: generated_at_time
+        description: From the endTime field of the source table. Breaks out the DateTime to a TIME column with a cast. Part of the eventual primary key downstream
+        data_tests: 
+          - not_null      
+      - name: source_value
+        description: Power generated in Megawatts (MW) of the source type. This value is Averaged due to data quality errors observed
+        data_tests: 
+          - not_null
+      - name: source_name 
+        description: Name of the source
+        data_tests: 
+          - not_null
+          - accepted_values: 
+              values: ['Wind Power Production']

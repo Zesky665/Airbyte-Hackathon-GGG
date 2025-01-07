@@ -1,0 +1,37 @@
+version: 2
+
+models: 
+    - name: fct_sources
+      description: Fact table of the power produced/generated in Finland by the various sources
+      columns: 
+        - name: fact_key
+          description: Primary Key generated as a generated surrogate key for the Fact Table. Based on a hash function of the Date, Time and Source Name
+          data_tests: 
+            - unique
+            - not_null
+        - name: date_key
+          description: Foreign key to the Date Dimension
+          data_tests: 
+            - not_null 
+            - relationships:
+                to: ref('dim_date')
+                field: date_key
+        - name: time_key
+          description: Foreign key to the Time Dimension
+          data_tests:
+            - not_null 
+            - relationships:
+                to: ref('dim_time')
+                field: time_key
+        - name: source_key
+          description: Foreign key to the Source Dimension
+          data_tests: 
+            - not_null 
+            - relationships:
+                to: ref('dim_sources')
+                field: source_key
+        - name: source_value 
+          description: Generated Power in Megawatts (MW)
+          data_tests: 
+            - not_null
+          
