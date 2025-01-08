@@ -6,8 +6,14 @@ app = marimo.App(width="full")
 
 @app.cell
 def _():
-    import marimo as mo 
+    import marimo as mo
     return (mo,)
+
+
+@app.cell
+def _():
+    import seaborn as sns
+    return (sns,)
 
 
 @app.cell
@@ -21,217 +27,67 @@ def _(mo):
 
 
 @app.cell
-def _(mo):
-    mo.md(r"""Testing out the joined view""")
-    return
-
-
-@app.cell
-def _(
-    FG_DWH,
-    dim_date,
-    dim_sources,
-    dim_time,
-    fct_sources,
-    fcttable,
-    joinedtable,
-    mo,
-    sources,
-    times,
-):
+def _(FG_DWH, mo, obt_fct_tbl):
     _df = mo.sql(
         f"""
-
-
-        WITH dates AS (
-            SELECT
-        *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_date"
-        ),
-        times AS (
-            SELECT
-        *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_time"
-        ),
-        sources AS (
-            SELECT
-                *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_sources"
-        ),
-        fcttable AS (
-            SELECT
-                *
-            FROM
-                "FG_DWH"."dbt_staging"."fct_sources"
-            USING SAMPLE 100
-        ),
-        joinedtable AS (
-            SELECT
-        *
-            FROM
-                fcttable
-                INNER JOIN dates
-                ON fcttable.date_key = dates.date_key
-                INNER JOIN times
-                ON fcttable.time_key = times.time_key
-                INNER JOIN sources
-                ON fcttable.source_key = sources.source_key
-        )
-        SELECT
-            *
-        FROM
-            joinedtable
+        SELECT * 
+        FROM "FG_DWH".dbt_staging.obt_fct_tbl
+        USING SAMPLE 10
         """
     )
     return
 
 
 @app.cell
-def _(
-    FG_DWH,
-    dim_date,
-    dim_sources,
-    dim_time,
-    fct_sources,
-    fcttable,
-    joinedtable,
-    mo,
-    sources,
-    times,
-):
+def _(FG_DWH, mo, obt_fct_tbl):
     _df = mo.sql(
         f"""
-        SUMMARIZE 
-
-
-        WITH dates AS (
-            SELECT
-        *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_date"
-        ),
-        times AS (
-            SELECT
-        *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_time"
-        ),
-        sources AS (
-            SELECT
-                *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_sources"
-        ),
-        fcttable AS (
-            SELECT
-                *
-            FROM
-                "FG_DWH"."dbt_staging"."fct_sources"
-            USING SAMPLE 100
-        ),
-        joinedtable AS (
-            SELECT
-        *
-            FROM
-                fcttable
-                INNER JOIN dates
-                ON fcttable.date_key = dates.date_key
-                INNER JOIN times
-                ON fcttable.time_key = times.time_key
-                INNER JOIN sources
-                ON fcttable.source_key = sources.source_key
-        )
-        SELECT
-            *
-        FROM
-            joinedtable
+        SELECT source_name, year_value, ROUND(min(source_value)) as min_value, ROUND(max(source_value)) as max_value, ROUND(sum(source_value)) as total_energy_produced, ROUND(avg(source_value)) as average_value, ROUND(median(source_value)) as median_value
+        FROM "FG_DWH".dbt_staging.obt_fct_tbl
+        GROUP BY source_name, year_value
+        ORDER BY year_value, source_name
         """
     )
     return
 
 
 @app.cell
-def _(
-    FG_DWH,
-    dim_date,
-    dim_sources,
-    dim_time,
-    fct_sources,
-    fcttable,
-    joinedtable,
-    mo,
-    sources,
-    times,
-):
-    _df = mo.sql(
+def _(FG_DWH, mo, obt_fct_tbl):
+    sourcesum = mo.sql(
         f"""
-
-
-        WITH dates AS (
-            SELECT
-        *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_date"
-        ),
-        times AS (
-            SELECT
-        *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_time"
-        ),
-        sources AS (
-            SELECT
-                *
-            FROM
-                "FG_DWH"."dbt_staging"."dim_sources"
-        ),
-        fcttable AS (
-            SELECT
-                *
-            FROM
-                "FG_DWH"."dbt_staging"."fct_sources"
-                USING SAMPLE 100
-        ),
-        joinedtable AS (
-            SELECT
-        sources.source_name,
-        fcttable.source_value,
-        dates."date_value",
-          dates."year_value",
-          dates."month_value",
-          dates."month_name",
-          dates."day_value",
-          dates."week_day_name",
-          dates."week_day_value",
-          dates."iso_week_num",
-          dates."quarter_value",
-        times."time_value",
-          times."time_of_day_str",
-          times."time_of_day_str_ext",
-          times."hour_value",
-          times."minute_value",
-          times."quarter_hour",
-          times."day_period_name",
-          times."day_or_night",
-          times."AMPM"
-            FROM
-                fcttable
-                INNER JOIN dates
-                ON fcttable.date_key = dates.date_key
-                INNER JOIN times
-                ON fcttable.time_key = times.time_key
-                INNER JOIN sources
-                ON fcttable.source_key = sources.source_key
-        )
-        SELECT
-            *
-        FROM
-            joinedtable
+        SELECT source_name, year_value, ROUND(sum(source_value)) as total_energy_produced
+        FROM "FG_DWH".dbt_staging.obt_fct_tbl
+        WHERE year_value < 2025
+        GROUP BY source_name, year_value
+        ORDER BY year_value, source_name
         """
     )
+    return (sourcesum,)
+
+
+@app.cell
+def _(sns, sourcesum):
+    sns.relplot(data=sourcesum, x="year_value", y="total_energy_produced", kind="line", hue="source_name")
+    return
+
+
+@app.cell
+def _(FG_DWH, mo, obt_fct_tbl):
+    _df = mo.sql(
+        f"""
+        SELECT source_name, year_value, month_value, ROUND(min(source_value)) as min_value, ROUND(max(source_value)) as max_value, ROUND(sum(source_value)) as total_energy_produced, ROUND(avg(source_value)) as average_value, ROUND(median(source_value)) as median_value
+        FROM "FG_DWH".dbt_staging.obt_fct_tbl
+        WHERE year_value < 2025
+        GROUP BY source_name, year_value, month_value
+        ORDER BY year_value, month_value, source_name
+        """
+    )
+    return
+
+
+@app.cell
+def _(crosstab, sns):
+    sns.relplot(data=crosstab, x="month_value", y="total_energy_produced", kind="line", hue="year_value", style="source_name")
     return
 
 
