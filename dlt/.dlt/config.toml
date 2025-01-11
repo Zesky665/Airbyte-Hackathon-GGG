@@ -4,3 +4,11 @@
 log_level="WARNING"  # the system log level of dlt
 # use the dlthub_telemetry setting to enable/disable anonymous usage data reporting, see https://dlthub.com/docs/reference/telemetry
 dlthub_telemetry = true
+
+[sources.filesystem]
+bucket_url = "file:///Users/zhare/Documents/GitHub/Airbyte-Hackathon-GGG/dlt/data"
+
+[normalize.data_writer]
+delimiter=";"
+include_header=false
+quoting="quote_all"
