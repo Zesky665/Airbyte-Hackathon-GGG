@@ -414,6 +414,102 @@ def _(FG_DWH, NuclearProductionRaw, mo):
 
 
 @app.cell
+def _(mo):
+    _df = mo.sql(
+        f"""
+        WITH basetable AS (
+            SELECT
+                source_name,
+                source_value,
+                date_value,
+                time_value
+            FROM "FG_DWH"."dbt_staging"."obt_fct_tbl"
+            LIMIT 1000
+        ),  pivtable as (
+        PIVOT basetable
+        ON source_name
+        USING SUM(source_value)
+        GROUP BY date_value, time_value
+        ), rename as (
+        SELECT
+        date_value,
+        time_value,
+        "Hydroelectric Power Production" as hydro,
+        "Wind Power Production" as wind,
+        "Total Electricity Production" as total,
+        "Nuclear Power Production" as nuclear
+        FROM pivtable
+        )
+        SELECT
+        *,
+        total - (hydro + wind + nuclear) as nongreen
+        FROM rename
+        ORDER BY date_value, time_value
+        """
+    )
+    return
+
+
+@app.cell
+def _(FG_DWH, fct_srcs_piv, mo, rename):
+    _df = mo.sql(
+        f"""
+        with pivtable as (
+        SELECT * 
+        FROM "FG_DWH"."dbt_staging_analytics".fct_srcs_piv
+        ORDER BY date_value, time_value
+        LIMIT 1000
+        ), rename as (
+        SELECT
+        date_value,
+        time_value,
+        "Hydroelectric Power Production" as hydro,
+        "Wind Power Production" as wind,
+        "Total Electricity Production" as total,
+        "Nuclear Power Production" as nuclear
+        FROM pivtable
+        )
+        SELECT 
+        *,
+        (total - (hydro + wind + nuclear)) as nongreen
+        FROM rename
+        ORDER BY date_value, time_value
+        """
+    )
+    return
+
+
+@app.cell
+def _(FG_DWH, mo, obt_fct_tbl):
+    _df = mo.sql(
+        f"""
+        SELECT 
+                    source_name,
+                source_value,
+                date_value,
+                time_value 
+        FROM "FG_DWH".dbt_staging.obt_fct_tbl
+        ORDER BY date_value, time_value
+        LIMIT 1000
+        """
+    )
+    return
+
+
+@app.cell
+def _(FG_DWH, fct_srcs_piv, mo):
+    _df = mo.sql(
+        f"""
+        SELECT * 
+        FROM "FG_DWH"."dbt_staging_analytics".fct_srcs_piv
+        ORDER BY date_value, time_value
+        LIMIT 1000
+        """
+    )
+    return
+
+
+@app.cell
 def _():
     return
 
