@@ -36,8 +36,8 @@ def fingrid_source(api_key: Optional[str] = dlt.secrets.value) -> Any:
 
     def get_resource(dataset):
         params = {
-            "start_time": start_time,
-            "end_time": end_time,
+            "startTime": start_time,
+            "endTime": end_time,
             "pageSize": 10000,
             "oneRowPerTimePeriod": False
         }
