@@ -172,3 +172,5 @@ cython_debug/
 .pypirc
 dbt/gggfingrid/.vscode/settings.json
 dbt/gggfingrid/.user.yml
+excel.py
+/Notebooks/refdata
