@@ -33,8 +33,10 @@ models:
     # Config indicated by + and applies to all files under models/example/
     staging:
       +materialized: view
+      +schema: 'staging'
     marts:
-      +materialized: table
+      +schema: 'staging'
+      +materialized: view
       dimensions:
         +docs: 
           node_color: "purple"
@@ -43,3 +45,5 @@ models:
         +docs:
           node_color: "orange"
         +tags: "facts"
+    presentation: 
+      +materialized: table
