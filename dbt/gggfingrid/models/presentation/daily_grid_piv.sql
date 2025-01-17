@@ -1,4 +1,4 @@
-WITH hourly as (SELECT * FROM {{ ref('grid_pivot') }}),
+WITH hourly as (SELECT * FROM {{ ref('hourly_grid_pivot') }}),
 groupbytable as (
 SELECT 
 date_value, 
