@@ -14,3 +14,5 @@ sources:
         description: Energy production in Finland from 2015 produced by Nuclear powered energy sources
       - name: HydroProductionRaw
         description: Energy production in Finland from 2015 produced by Hydroelectric powered energy sources
+      - name: ElectrictyConsumptionRaw
+        description: Energy Consumption in Finland from 2015 onwards

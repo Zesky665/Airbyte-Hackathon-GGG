@@ -4,7 +4,7 @@ gggfingrid:
     dev:
       type: duckdb
       path: "md:FG_DWH?motherduck_token={{env_var('MOTHERDUCK_TOKEN')}}"
-      schema: 'dbt_staging'
+      schema: 'analytics'
       extensions:
         - httpfs
         - parquet

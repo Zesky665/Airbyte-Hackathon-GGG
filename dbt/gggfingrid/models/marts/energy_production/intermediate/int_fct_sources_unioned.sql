@@ -23,6 +23,11 @@ WITH uniontable AS (
     *
   FROM
     {{ ref('stg_fingrid__wind') }}
+  UNION 
+  SELECT
+    *
+  FROM 
+    {{ ref('stg_fingrid__consumption') }}
 )
 SELECT
   *
